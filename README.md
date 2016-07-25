@@ -1,5 +1,8 @@
 # PHP DataDog StatsD Client
 
+This fork aims to replace non-blocking socket_create with blocking fsockopen when sending message to datadog agent
+
+
 This is an extremely simple PHP [datadogstatsd](http://www.datadoghq.com/) client.
 Requires PHP >= 5.3.0.
 
