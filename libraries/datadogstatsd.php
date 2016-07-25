@@ -223,10 +223,19 @@ class Datadogstatsd {
 
     public static function flush($udp_message) {
         // Non - Blocking UDP I/O - Use IP Addresses!
-        $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
-        socket_set_nonblock($socket);
-        socket_sendto($socket, $udp_message, strlen($udp_message), 0, static::$__server, static::$__serverPort);
-        socket_close($socket);
+//        $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+//        socket_set_nonblock($socket);
+//        socket_sendto($socket, $udp_message, strlen($udp_message), 0, static::$__server, static::$__serverPort);
+//        socket_close($socket);
+
+        $fp = fsockopen("udp://" . static::$__server, static::$__serverPort, $errno, $errstr);
+        if (!$fp) {
+            throw new Exception("Cannot open port");
+        } else {
+            fwrite($fp, $udp_message);
+            fclose($fp);
+        }
+
 
     }
 
@@ -240,7 +249,7 @@ class Datadogstatsd {
         self::$__apiCurlSslVerifyHost = $curlVerifySslHost;
         self::$__apiCurlSslVerifyPeer = $curlVerifySslPeer;
         self::$__server = $localStatsdServer;
-		self::$__serverPort = $localStatsdPort;
+	self::$__serverPort = $localStatsdPort;
     }
 
     /**
